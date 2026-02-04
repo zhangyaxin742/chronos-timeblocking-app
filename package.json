@@ -1,0 +1,21 @@
+{
+  "name": "chronos",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev -w @chronos/web",
+    "dev:api": "npm run dev -w @chronos/api",
+    "dev:web": "npm run dev -w @chronos/web",
+    "build": "npm run build -w @chronos/web",
+    "lint": "npm run lint -w @chronos/web",
+    "db:migrate": "npm run migrate -w @chronos/api",
+    "db:seed": "npm run seed -w @chronos/api"
+  },
+  "devDependencies": {
+    "supabase": "^2.74.5",
+    "typescript": "^5.3.3"
+  }
+}

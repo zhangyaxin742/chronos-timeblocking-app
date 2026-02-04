@@ -1,0 +1,132 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 255 255 255;
+    --foreground: 17 24 39;
+    --surface: 249 250 251;
+    --border: 229 231 235;
+    --text-primary: 17 24 39;
+    --text-secondary: 107 114 128;
+    --text-disabled: 209 213 219;
+    --time-axis-width: 60px;
+    --slot-height: 60px;
+  }
+
+  .dark {
+    --background: 17 24 39;
+    --foreground: 249 250 251;
+    --surface: 31 41 55;
+    --border: 55 65 81;
+    --text-primary: 249 250 251;
+    --text-secondary: 156 163 175;
+    --text-disabled: 75 85 99;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer utilities {
+  .bg-background {
+    background-color: rgb(var(--background));
+  }
+  
+  .text-foreground {
+    color: rgb(var(--foreground));
+  }
+  
+  .bg-surface {
+    background-color: rgb(var(--surface));
+  }
+  
+  .border-border {
+    border-color: rgb(var(--border));
+  }
+  
+  .text-primary {
+    color: rgb(var(--text-primary));
+  }
+  
+  .text-secondary {
+    color: rgb(var(--text-secondary));
+  }
+  
+  .text-disabled {
+    color: rgb(var(--text-disabled));
+  }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(var(--border));
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(var(--text-secondary));
+}
+
+/* Time grid lines */
+.time-grid-line {
+  @apply border-t border-gray-200 dark:border-gray-700;
+}
+
+.time-grid-line-half {
+  @apply border-t border-gray-100 dark:border-gray-800;
+}
+
+/* Current time indicator */
+.current-time-line {
+  @apply absolute left-0 right-0 h-0.5 bg-red-500 z-20;
+}
+
+.current-time-dot {
+  @apply absolute -left-1.5 -top-1.5 w-3 h-3 bg-red-500 rounded-full;
+}
+
+/* Timeblock styles */
+.timeblock {
+  @apply absolute left-[60px] right-0 mx-2 rounded-lg border-l-2 transition-all duration-150;
+}
+
+.timeblock:hover {
+  @apply shadow-md;
+}
+
+.timeblock.dragging {
+  @apply shadow-lg scale-[1.02] opacity-90 z-50;
+}
+
+/* Task checkbox animation */
+.task-checkbox {
+  @apply w-5 h-5 rounded border-2 flex items-center justify-center cursor-pointer transition-all;
+}
+
+.task-checkbox.checked {
+  @apply animate-task-check;
+}
+
+/* Confetti effect */
+.confetti-particle {
+  @apply absolute w-2 h-2 rounded-full animate-confetti;
+}
