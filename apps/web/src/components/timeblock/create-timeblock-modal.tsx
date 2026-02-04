@@ -4,9 +4,7 @@ import { useState } from 'react';
 import { useChronosStore } from '@/store';
 import { Modal } from '@/components/ui/modal';
 import { CategorySelector } from './category-selector';
-import { parseDuration, getTodayISO } from '@chronos/shared';
-import { Clock, Type } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { parseDuration } from '@chronos/shared';
 
 export function CreateTimeblockModal() {
   const {
@@ -67,31 +65,24 @@ export function CreateTimeblockModal() {
     <Modal
       isOpen={isCreatingTimeblock}
       onClose={handleClose}
-      title="Create Timeblock"
+      title="New Timeblock"
     >
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Title */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Title (optional)
-          </label>
-          <div className="relative">
-            <Type className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input
-              type="text"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-primary focus:border-transparent"
-              placeholder="What are you working on?"
-            />
-          </div>
+          <label className="input-label">Title (optional)</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="input"
+            placeholder="What are you working on?"
+          />
         </div>
 
         {/* Category */}
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Category
-          </label>
+          <label className="input-label">Category</label>
           <CategorySelector
             categories={categories}
             selectedId={categoryId}
@@ -102,52 +93,49 @@ export function CreateTimeblockModal() {
         {/* Time */}
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Start Time
-            </label>
-            <div className="relative">
-              <Clock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-              <input
-                type="time"
-                value={startTime}
-                onChange={(e) => setStartTime(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-primary focus:border-transparent"
-              />
-            </div>
+            <label className="input-label">Start Time</label>
+            <input
+              type="time"
+              value={startTime}
+              onChange={(e) => setStartTime(e.target.value)}
+              className="input"
+            />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-              Duration
-            </label>
+            <label className="input-label">Duration</label>
             <input
               type="text"
               value={duration}
               onChange={(e) => setDuration(e.target.value)}
-              className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+              className="input"
               placeholder="1h 30m"
             />
-            <p className="mt-1 text-xs text-gray-500">e.g., 1h, 30m, 1h 30m</p>
+            <p 
+              className="mt-1 text-xs"
+              style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
+            >
+              e.g., 1h, 30m, 1h 30m
+            </p>
           </div>
         </div>
 
         {/* Actions */}
-        <div className="flex gap-3 pt-4">
+        <div 
+          className="flex gap-3 pt-4"
+          style={{ borderTop: '1px solid var(--border-subtle)' }}
+        >
           <button
             type="button"
             onClick={handleClose}
-            className="flex-1 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            className="btn-secondary flex-1 py-2.5"
           >
             Cancel
           </button>
           <button
             type="submit"
             disabled={isLoading}
-            className={cn(
-              'flex-1 py-2.5 rounded-lg font-medium text-white transition-colors',
-              'bg-brand-primary hover:bg-brand-primary-dark',
-              'disabled:opacity-50 disabled:cursor-not-allowed'
-            )}
+            className="btn-primary flex-1 py-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {isLoading ? 'Creating...' : 'Create'}
           </button>

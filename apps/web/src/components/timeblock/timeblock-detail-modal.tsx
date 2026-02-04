@@ -5,9 +5,8 @@ import { useChronosStore } from '@/store';
 import { Modal } from '@/components/ui/modal';
 import { CategorySelector } from './category-selector';
 import { TaskList } from './task-list';
-import { formatTime, parseDuration } from '@chronos/shared';
-import { Clock, Type, Trash2, Plus } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { formatTime } from '@chronos/shared';
+import { Trash2, Plus } from 'lucide-react';
 
 export function TimeblockDetailModal() {
   const {
@@ -66,16 +65,18 @@ export function TimeblockDetailModal() {
     <Modal
       isOpen={!!selectedTimeblock}
       onClose={handleClose}
-      title={isEditing ? 'Edit Timeblock' : 'Timeblock Details'}
+      title={isEditing ? 'Edit Timeblock' : 'Timeblock'}
     >
-      <div className="space-y-4">
+      <div className="space-y-6">
         {/* Time display */}
-        <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-          <Clock className="w-4 h-4" />
+        <div 
+          className="flex items-center gap-3 text-sm"
+          style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}
+        >
           <span>
             {formatTime(selectedTimeblock.start_time)} - {formatTime(selectedTimeblock.end_time)}
           </span>
-          <span className="text-gray-400">•</span>
+          <span style={{ color: 'var(--text-muted)' }}>•</span>
           <span>{selectedTimeblock.duration_minutes} min</span>
         </div>
 
@@ -83,23 +84,19 @@ export function TimeblockDetailModal() {
           <>
             {/* Title input */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Title
-              </label>
+              <label className="input-label">Title</label>
               <input
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                className="input"
                 placeholder="What are you working on?"
               />
             </div>
 
             {/* Category selector */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Category
-              </label>
+              <label className="input-label">Category</label>
               <CategorySelector
                 categories={categories}
                 selectedId={categoryId}
@@ -108,16 +105,19 @@ export function TimeblockDetailModal() {
             </div>
 
             {/* Save/Cancel buttons */}
-            <div className="flex gap-3 pt-2">
+            <div 
+              className="flex gap-3 pt-4"
+              style={{ borderTop: '1px solid var(--border-subtle)' }}
+            >
               <button
                 onClick={() => setIsEditing(false)}
-                className="flex-1 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                className="btn-secondary flex-1 py-2.5"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
-                className="flex-1 py-2.5 rounded-lg font-medium text-white bg-brand-primary hover:bg-brand-primary-dark transition-colors"
+                className="btn-primary flex-1 py-2.5"
               >
                 Save
               </button>
@@ -127,58 +127,69 @@ export function TimeblockDetailModal() {
           <>
             {/* Display mode */}
             <div className="flex items-center gap-3">
-              {category && (
-                <div
-                  className="w-4 h-4 rounded-full"
-                  style={{ backgroundColor: category.color }}
-                />
-              )}
-              <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+              <h3 
+                className="text-lg font-medium"
+                style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}
+              >
                 {selectedTimeblock.title || category?.name || 'Untitled'}
               </h3>
-              {category?.emoji && <span className="text-xl">{category.emoji}</span>}
             </div>
+            
+            {category?.name && (
+              <div 
+                className="text-xs uppercase tracking-wider"
+                style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
+              >
+                {category.name}
+              </div>
+            )}
 
             {/* Tasks section */}
-            <div className="border-t border-gray-200 dark:border-gray-700 pt-4">
-              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <div style={{ borderTop: '1px solid var(--border-subtle)', paddingTop: '1rem' }}>
+              <h4 
+                className="text-xs font-medium uppercase tracking-wider mb-3"
+                style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}
+              >
                 Tasks
               </h4>
               
               <TaskList tasks={selectedTimeblock.tasks || []} />
 
               {/* Add task form */}
-              <form onSubmit={handleAddTask} className="mt-3 flex gap-2">
+              <form onSubmit={handleAddTask} className="mt-4 flex gap-2">
                 <input
                   type="text"
                   value={newTaskTitle}
                   onChange={(e) => setNewTaskTitle(e.target.value)}
-                  className="flex-1 px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                  className="input flex-1 text-sm"
                   placeholder="Add a task..."
                 />
                 <button
                   type="submit"
-                  className="px-3 py-2 rounded-lg bg-brand-primary text-white hover:bg-brand-primary-dark transition-colors"
+                  className="btn-primary px-3"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-4 h-4" strokeWidth={1.5} />
                 </button>
               </form>
             </div>
 
             {/* Action buttons */}
-            <div className="flex gap-3 pt-2 border-t border-gray-200 dark:border-gray-700">
+            <div 
+              className="flex gap-3 pt-4"
+              style={{ borderTop: '1px solid var(--border-subtle)' }}
+            >
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex-1 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                className="btn-secondary flex-1 py-2.5"
               >
                 Edit
               </button>
               <button
                 onClick={handleDelete}
                 disabled={isDeleting}
-                className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-red-500 text-white hover:bg-red-600 transition-colors disabled:opacity-50"
+                className="btn-secondary flex items-center justify-center gap-2 px-4 py-2.5 disabled:opacity-50"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-4 h-4" strokeWidth={1.5} />
                 {isDeleting ? 'Deleting...' : 'Delete'}
               </button>
             </div>

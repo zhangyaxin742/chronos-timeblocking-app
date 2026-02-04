@@ -102,11 +102,16 @@ export function DayView() {
           <TimeblockCard key={timeblock.id} timeblock={timeblock} startHour={startHour} />
         ))}
 
-        {/* Drag preview */}
+        {/* Drag preview - monochrome */}
         {dragPreviewStyle && (
           <div
-            className="absolute left-[60px] right-4 rounded-lg border-2 border-dashed border-brand-primary bg-brand-primary/10 pointer-events-none"
-            style={dragPreviewStyle}
+            className="absolute left-[60px] right-4 pointer-events-none"
+            style={{
+              ...dragPreviewStyle,
+              background: 'rgba(255, 255, 255, 0.05)',
+              border: '1px dashed var(--border-strong)',
+              borderRadius: '2px',
+            }}
           />
         )}
       </div>

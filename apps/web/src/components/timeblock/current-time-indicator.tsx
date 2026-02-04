@@ -41,8 +41,14 @@ export function CurrentTimeIndicator({ startHour }: CurrentTimeIndicatorProps) {
       style={{ top: position }}
     >
       <div className="relative">
-        <div className="absolute left-[52px] w-3 h-3 -mt-1.5 rounded-full bg-red-500" />
-        <div className="absolute left-[60px] right-0 h-0.5 bg-red-500" />
+        <div 
+          className="absolute left-[52px] w-2 h-2 -mt-1 rounded-full" 
+          style={{ backgroundColor: 'var(--text-secondary)' }}
+        />
+        <div 
+          className="absolute left-[60px] right-0" 
+          style={{ height: '1px', backgroundColor: 'var(--text-secondary)' }}
+        />
       </div>
     </div>
   );

@@ -10,72 +10,79 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        brand: {
-          primary: '#4A90E2',
-          'primary-dark': '#357ABD',
-          'primary-light': '#A8D0F7',
+        // Monochromatic palette
+        bg: {
+          primary: 'var(--bg-primary)',
+          secondary: 'var(--bg-secondary)',
+          tertiary: 'var(--bg-tertiary)',
+          elevated: 'var(--bg-elevated)',
         },
-        category: {
-          blue: '#4A90E2',
-          green: '#7ED321',
-          red: '#E74C3C',
-          purple: '#9B59B6',
-          yellow: '#F1C40F',
-          orange: '#E67E22',
+        border: {
+          subtle: 'var(--border-subtle)',
+          DEFAULT: 'var(--border-default)',
+          strong: 'var(--border-strong)',
         },
-        semantic: {
-          success: '#10B981',
-          warning: '#F59E0B',
-          error: '#EF4444',
-          info: '#3B82F6',
+        text: {
+          primary: 'var(--text-primary)',
+          secondary: 'var(--text-secondary)',
+          tertiary: 'var(--text-tertiary)',
+          muted: 'var(--text-muted)',
+        },
+        accent: {
+          subtle: 'var(--accent-subtle)',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', 'monospace'],
       },
       fontSize: {
-        'h1': ['24px', { lineHeight: '32px', fontWeight: '700' }],
-        'h2': ['18px', { lineHeight: '24px', fontWeight: '600' }],
-        'body': ['16px', { lineHeight: '24px', fontWeight: '400' }],
-        'caption': ['14px', { lineHeight: '20px', fontWeight: '400' }],
-        'small': ['12px', { lineHeight: '16px', fontWeight: '500' }],
+        'xs': ['0.64rem', { lineHeight: '1.5' }],
+        'sm': ['0.8rem', { lineHeight: '1.5' }],
+        'base': ['1rem', { lineHeight: '1.5' }],
+        'lg': ['1.25rem', { lineHeight: '1.2' }],
+        'xl': ['1.563rem', { lineHeight: '1.2' }],
+        '2xl': ['1.953rem', { lineHeight: '1.2' }],
       },
       spacing: {
-        'xs': '4px',
-        'sm': '8px',
-        'md': '16px',
-        'lg': '24px',
-        'xl': '32px',
-        '2xl': '48px',
+        '1': '0.25rem',
+        '2': '0.5rem',
+        '3': '0.75rem',
+        '4': '1rem',
+        '5': '1.25rem',
+        '6': '1.5rem',
+        '8': '2rem',
+        '10': '2.5rem',
+        '12': '3rem',
+        '16': '4rem',
+      },
+      borderRadius: {
+        'none': '0',
+        'sm': '2px',
+        'DEFAULT': '4px',
+      },
+      boxShadow: {
+        'sm': '0 1px 2px rgba(0, 0, 0, 0.3)',
+        'md': '0 2px 8px rgba(0, 0, 0, 0.3)',
+        'lg': '0 4px 16px rgba(0, 0, 0, 0.4)',
+        'xl': '0 8px 32px rgba(0, 0, 0, 0.5)',
       },
       animation: {
+        'fade-in': 'fade-in 150ms ease',
+        'slide-up': 'slide-up 200ms ease',
         'modal': 'modal 200ms ease-out',
-        'timeblock-appear': 'timeblock-appear 150ms ease-out',
-        'timeblock-delete': 'timeblock-delete 200ms ease-in',
-        'task-check': 'task-check 300ms cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-        'confetti': 'confetti 400ms ease-out forwards',
       },
       keyframes: {
+        'fade-in': {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        'slide-up': {
+          '0%': { opacity: '0', transform: 'translateY(10px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
         modal: {
           '0%': { opacity: '0', transform: 'scale(0.95)' },
           '100%': { opacity: '1', transform: 'scale(1)' },
-        },
-        'timeblock-appear': {
-          '0%': { opacity: '0', transform: 'translateY(-10px)' },
-          '100%': { opacity: '1', transform: 'translateY(0)' },
-        },
-        'timeblock-delete': {
-          '0%': { opacity: '1', transform: 'translateX(0)' },
-          '100%': { opacity: '0', transform: 'translateX(-100%)' },
-        },
-        'task-check': {
-          '0%': { transform: 'scale(1)' },
-          '50%': { transform: 'scale(1.2)' },
-          '100%': { transform: 'scale(1)' },
-        },
-        confetti: {
-          '0%': { transform: 'scale(0)', opacity: '1' },
-          '100%': { transform: 'scale(1)', opacity: '0' },
         },
       },
     },

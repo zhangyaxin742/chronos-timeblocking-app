@@ -26,7 +26,7 @@ export function DashboardClient() {
   }, [fetchCategories, fetchTimeblocks, fetchBacklogTasks, selectedDate]);
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+    <div className="min-h-screen flex flex-col" style={{ backgroundColor: 'var(--bg-primary)' }}>
       <Header />
       <main className="flex-1 max-w-4xl mx-auto w-full">
         <DayView />

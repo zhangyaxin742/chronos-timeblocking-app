@@ -2,13 +2,22 @@
 
 import { useState } from 'react';
 import { ChevronDown, Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
 import type { Category } from '@chronos/shared';
 
 interface CategorySelectorProps {
   categories: Category[];
   selectedId: string | null;
   onSelect: (id: string | null) => void;
+}
+
+// Get border style for category distinction
+function getCategoryBorderStyle(name?: string): string {
+  const n = name?.toLowerCase() || '';
+  if (n.includes('work')) return 'solid';
+  if (n.includes('personal')) return 'dashed';
+  if (n.includes('focus')) return 'double';
+  if (n.includes('health')) return 'dotted';
+  return 'solid';
 }
 
 export function CategorySelector({ categories, selectedId, onSelect }: CategorySelectorProps) {
@@ -21,33 +30,51 @@ export function CategorySelector({ categories, selectedId, onSelect }: CategoryS
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className={cn(
-          'w-full flex items-center justify-between px-4 py-2.5 rounded-lg',
-          'border border-gray-300 dark:border-gray-600',
-          'bg-white dark:bg-gray-700',
-          'text-gray-900 dark:text-white',
-          'focus:ring-2 focus:ring-brand-primary focus:border-transparent'
-        )}
+        className="w-full flex items-center justify-between px-4 py-2.5 transition-all"
+        style={{
+          backgroundColor: 'var(--bg-primary)',
+          border: '1px solid var(--border-default)',
+          borderRadius: '2px',
+          color: 'var(--text-primary)',
+          fontFamily: 'var(--font-mono)',
+        }}
       >
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
           {selectedCategory ? (
             <>
               <div
-                className="w-4 h-4 rounded-full"
-                style={{ backgroundColor: selectedCategory.color }}
+                className="w-6 h-3"
+                style={{ 
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  borderLeft: `3px ${getCategoryBorderStyle(selectedCategory.name)} var(--text-tertiary)`,
+                }}
               />
-              <span>{selectedCategory.emoji}</span>
-              <span>{selectedCategory.name}</span>
+              <span style={{ color: 'var(--text-primary)' }}>{selectedCategory.name}</span>
             </>
           ) : (
-            <span className="text-gray-500">Select a category</span>
+            <span style={{ color: 'var(--text-muted)' }}>Select a category</span>
           )}
         </div>
-        <ChevronDown className={cn('w-5 h-5 text-gray-400 transition-transform', isOpen && 'rotate-180')} />
+        <ChevronDown 
+          className="w-4 h-4 transition-transform" 
+          style={{ 
+            color: 'var(--text-tertiary)',
+            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)'
+          }}
+          strokeWidth={1.5}
+        />
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+        <div 
+          className="absolute z-10 w-full mt-1 max-h-60 overflow-y-auto"
+          style={{
+            backgroundColor: 'var(--bg-elevated)',
+            border: '1px solid var(--border-default)',
+            borderRadius: '2px',
+            boxShadow: '0 4px 16px rgba(0,0,0,0.4)',
+          }}
+        >
           {categories.map((category) => (
             <button
               key={category.id}
@@ -56,21 +83,29 @@ export function CategorySelector({ categories, selectedId, onSelect }: CategoryS
                 onSelect(category.id);
                 setIsOpen(false);
               }}
-              className={cn(
-                'w-full flex items-center gap-2 px-4 py-2.5 hover:bg-gray-50 dark:hover:bg-gray-700',
-                selectedId === category.id && 'bg-gray-50 dark:bg-gray-700'
-              )}
+              className="w-full flex items-center gap-3 px-4 py-3 transition-colors"
+              style={{
+                backgroundColor: selectedId === category.id ? 'var(--bg-tertiary)' : 'transparent',
+                fontFamily: 'var(--font-mono)',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = selectedId === category.id ? 'var(--bg-tertiary)' : 'transparent'}
             >
               <div
-                className="w-4 h-4 rounded-full"
-                style={{ backgroundColor: category.color }}
+                className="w-6 h-3"
+                style={{ 
+                  backgroundColor: 'rgba(255,255,255,0.1)',
+                  borderLeft: `3px ${getCategoryBorderStyle(category.name)} var(--text-tertiary)`,
+                }}
               />
-              <span>{category.emoji}</span>
-              <span className="flex-1 text-left text-gray-900 dark:text-white">
+              <span 
+                className="flex-1 text-left"
+                style={{ color: 'var(--text-primary)' }}
+              >
                 {category.name}
               </span>
               {selectedId === category.id && (
-                <Check className="w-4 h-4 text-brand-primary" />
+                <Check className="w-4 h-4" style={{ color: 'var(--text-secondary)' }} strokeWidth={1.5} />
               )}
             </button>
           ))}

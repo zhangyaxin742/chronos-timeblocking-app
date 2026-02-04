@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from 'react';
 import { X } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 interface ModalProps {
   isOpen: boolean;
@@ -39,36 +38,46 @@ export function Modal({ isOpen, onClose, title, children, size = 'md' }: ModalPr
 
   if (!isOpen) return null;
 
-  const sizeClasses = {
-    sm: 'max-w-sm',
-    md: 'max-w-md',
-    lg: 'max-w-lg',
+  const sizeMap = {
+    sm: '360px',
+    md: '480px',
+    lg: '600px',
   };
 
   return (
     <div
       ref={overlayRef}
       onClick={handleOverlayClick}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 animate-fade-in"
+      className="fixed inset-0 z-50 flex items-center justify-center p-4 animate-fade-in"
+      style={{ backgroundColor: 'rgba(0, 0, 0, 0.8)', backdropFilter: 'blur(4px)' }}
     >
       <div
-        className={cn(
-          'w-full bg-white dark:bg-gray-800 rounded-2xl shadow-xl',
-          'animate-slide-up',
-          sizeClasses[size]
-        )}
+        className="w-full animate-slide-up"
+        style={{
+          maxWidth: sizeMap[size],
+          backgroundColor: 'var(--bg-secondary)',
+          border: '1px solid var(--border-default)',
+          borderRadius: '4px',
+          boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)',
+        }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+        <div 
+          className="flex items-center justify-between px-6 py-4"
+          style={{ borderBottom: '1px solid var(--border-subtle)' }}
+        >
+          <h2 
+            className="text-lg font-semibold uppercase tracking-wider"
+            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}
+          >
             {title}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 -mr-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="btn-icon -mr-2"
             aria-label="Close"
           >
-            <X className="w-5 h-5 text-gray-500 dark:text-gray-400" />
+            <X className="w-4 h-4" strokeWidth={1.5} />
           </button>
         </div>
 

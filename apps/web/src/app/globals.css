@@ -1,76 +1,115 @@
+/* Import JetBrains Mono for typewriter aesthetic */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --background: 255 255 255;
-    --foreground: 17 24 39;
-    --surface: 249 250 251;
-    --border: 229 231 235;
-    --text-primary: 17 24 39;
-    --text-secondary: 107 114 128;
-    --text-disabled: 209 213 219;
-    --time-axis-width: 60px;
-    --slot-height: 60px;
-  }
-
-  .dark {
-    --background: 17 24 39;
-    --foreground: 249 250 251;
-    --surface: 31 41 55;
-    --border: 55 65 81;
-    --text-primary: 249 250 251;
-    --text-secondary: 156 163 175;
-    --text-disabled: 75 85 99;
-  }
+/* ===== MONOCHROMATIC DESIGN SYSTEM ===== */
+:root {
+  /* Dark Mode (Default) */
+  --bg-primary: #0D0D0D;
+  --bg-secondary: #1A1A1A;
+  --bg-tertiary: #262626;
+  --bg-elevated: #333333;
+  
+  --border-subtle: #2A2A2A;
+  --border-default: #3D3D3D;
+  --border-strong: #525252;
+  
+  --text-primary: #FAFAFA;
+  --text-secondary: #A3A3A3;
+  --text-tertiary: #737373;
+  --text-muted: #525252;
+  
+  --accent-subtle: #404040;
+  
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Fira Code', 'Consolas', monospace;
 }
 
-@layer base {
-  * {
-    @apply border-border;
-  }
+/* Light mode */
+.light {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #FAFAFA;
+  --bg-tertiary: #F5F5F5;
+  --bg-elevated: #FFFFFF;
   
-  body {
-    @apply bg-background text-foreground;
-    font-feature-settings: "rlig" 1, "calt" 1;
-  }
+  --border-subtle: #F0F0F0;
+  --border-default: #E5E5E5;
+  --border-strong: #D4D4D4;
+  
+  --text-primary: #0D0D0D;
+  --text-secondary: #525252;
+  --text-tertiary: #737373;
+  --text-muted: #A3A3A3;
 }
 
-@layer utilities {
-  .bg-background {
-    background-color: rgb(var(--background));
-  }
-  
-  .text-foreground {
-    color: rgb(var(--foreground));
-  }
-  
-  .bg-surface {
-    background-color: rgb(var(--surface));
-  }
-  
-  .border-border {
-    border-color: rgb(var(--border));
-  }
-  
-  .text-primary {
-    color: rgb(var(--text-primary));
-  }
-  
-  .text-secondary {
-    color: rgb(var(--text-secondary));
-  }
-  
-  .text-disabled {
-    color: rgb(var(--text-disabled));
-  }
+/* ===== BASE STYLES ===== */
+* {
+  box-sizing: border-box;
 }
 
-/* Scrollbar styling */
+html {
+  color-scheme: dark;
+}
+
+html.light {
+  color-scheme: light;
+}
+
+body {
+  font-family: var(--font-mono);
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  letter-spacing: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ===== TYPOGRAPHY ===== */
+.h1 {
+  font-family: var(--font-mono);
+  font-size: 1.953rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.h2 {
+  font-family: var(--font-mono);
+  font-size: 1.563rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  line-height: 1.2;
+}
+
+.h3 {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.body-sm {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+}
+
+/* ===== SCROLLBAR ===== */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -78,55 +117,286 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(var(--border));
-  border-radius: 4px;
+  background: var(--border-default);
+  border-radius: 0;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(var(--text-secondary));
+  background: var(--border-strong);
 }
 
-/* Time grid lines */
+/* ===== TIME GRID ===== */
 .time-grid-line {
-  @apply border-t border-gray-200 dark:border-gray-700;
+  border-top: 1px solid var(--border-subtle);
 }
 
 .time-grid-line-half {
-  @apply border-t border-gray-100 dark:border-gray-800;
+  border-top: 1px dashed var(--border-subtle);
+  opacity: 0.5;
 }
 
-/* Current time indicator */
+/* Current time indicator - monochrome */
 .current-time-line {
-  @apply absolute left-0 right-0 h-0.5 bg-red-500 z-20;
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--text-secondary);
+  z-index: 20;
 }
 
 .current-time-dot {
-  @apply absolute -left-1.5 -top-1.5 w-3 h-3 bg-red-500 rounded-full;
+  position: absolute;
+  left: -4px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--text-secondary);
+  border-radius: 50%;
 }
 
-/* Timeblock styles */
+/* ===== TIMEBLOCK STYLES ===== */
 .timeblock {
-  @apply absolute left-[60px] right-0 mx-2 rounded-lg border-l-2 transition-all duration-150;
+  position: absolute;
+  left: 60px;
+  right: 0;
+  margin: 0 8px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-default);
+  border-left: 3px solid var(--text-tertiary);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 150ms ease;
 }
 
 .timeblock:hover {
-  @apply shadow-md;
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--border-strong);
+}
+
+.timeblock.selected {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: var(--text-secondary);
+  box-shadow: 0 0 0 1px var(--text-tertiary);
 }
 
 .timeblock.dragging {
-  @apply shadow-lg scale-[1.02] opacity-90 z-50;
+  opacity: 0.8;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  z-index: 50;
 }
 
-/* Task checkbox animation */
+/* Category distinction via border style */
+.timeblock[data-category="work"] {
+  border-left-style: solid;
+}
+
+.timeblock[data-category="personal"] {
+  border-left-style: dashed;
+}
+
+.timeblock[data-category="focus"] {
+  border-left-style: double;
+}
+
+.timeblock[data-category="health"] {
+  border-left-style: dotted;
+}
+
+/* ===== TASK STYLES ===== */
 .task-checkbox {
-  @apply w-5 h-5 rounded border-2 flex items-center justify-center cursor-pointer transition-all;
+  width: 16px;
+  height: 16px;
+  border: 1px solid var(--border-strong);
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 150ms ease;
+}
+
+.task-checkbox:hover {
+  border-color: var(--text-secondary);
 }
 
 .task-checkbox.checked {
-  @apply animate-task-check;
+  background: var(--text-tertiary);
+  border-color: var(--text-tertiary);
 }
 
-/* Confetti effect */
-.confetti-particle {
-  @apply absolute w-2 h-2 rounded-full animate-confetti;
+/* ===== BUTTONS ===== */
+.btn-primary {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 2px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.btn-primary:hover {
+  background: var(--text-secondary);
+}
+
+.btn-secondary {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: 2px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.btn-secondary:hover {
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+  background: var(--bg-tertiary);
+}
+
+.btn-icon {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  color: var(--text-tertiary);
+  border: 1px solid transparent;
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 150ms ease;
+}
+
+.btn-icon:hover {
+  color: var(--text-primary);
+  border-color: var(--border-default);
+  background: var(--bg-tertiary);
+}
+
+/* ===== INPUTS ===== */
+.input {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  border-radius: 2px;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  transition: all 150ms ease;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--text-secondary);
+  box-shadow: 0 0 0 1px var(--text-tertiary);
+}
+
+.input:hover:not(:focus) {
+  border-color: var(--border-strong);
+}
+
+.input-label {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+/* ===== MODAL ===== */
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(4px);
+}
+
+.modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-default);
+  border-radius: 4px;
+  padding: 1.5rem;
+  max-width: 480px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
+.modal-title {
+  font-family: var(--font-mono);
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+/* ===== FAB ===== */
+.fab {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: 48px;
+  height: 48px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  border: none;
+  border-radius: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 150ms ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+.fab:hover {
+  background: var(--text-secondary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { 
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to { 
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 150ms ease;
+}
+
+.animate-slide-up {
+  animation: slide-up 200ms ease;
 }

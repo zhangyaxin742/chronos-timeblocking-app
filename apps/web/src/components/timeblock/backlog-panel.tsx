@@ -2,7 +2,6 @@
 
 import { useEffect } from 'react';
 import { useChronosStore } from '@/store';
-import { cn } from '@/lib/utils';
 import { Check, Trash2, RefreshCw, Inbox } from 'lucide-react';
 import type { Task } from '@chronos/shared';
 
@@ -31,21 +30,27 @@ export function BacklogPanel() {
   }
 
   return (
-    <div className="bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700">
-      <div className="max-w-4xl mx-auto px-4 py-3">
+    <div style={{ backgroundColor: 'var(--bg-secondary)', borderTop: '1px solid var(--border-subtle)' }}>
+      <div className="max-w-4xl mx-auto px-6 py-4">
         <div className="flex items-center justify-between mb-3">
           <div className="flex items-center gap-2">
-            <Inbox className="w-4 h-4 text-gray-500" />
-            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
+            <Inbox className="w-4 h-4" style={{ color: 'var(--text-muted)' }} strokeWidth={1.5} />
+            <h3 
+              className="text-xs font-medium uppercase tracking-wider"
+              style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}
+            >
               Backlog ({backlogTasks.length})
             </h3>
           </div>
           <button
             onClick={handleRollover}
-            className="flex items-center gap-1 text-xs text-brand-primary hover:underline"
+            className="flex items-center gap-1 text-xs transition-colors"
+            style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}
+            onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+            onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-tertiary)'}
           >
-            <RefreshCw className="w-3 h-3" />
-            Check for rollover
+            <RefreshCw className="w-3 h-3" strokeWidth={1.5} />
+            Check rollover
           </button>
         </div>
         
@@ -59,7 +64,10 @@ export function BacklogPanel() {
             />
           ))}
           {backlogTasks.length > 5 && (
-            <p className="text-xs text-gray-500 text-center py-1">
+            <p 
+              className="text-xs text-center py-1"
+              style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
+            >
               +{backlogTasks.length - 5} more tasks
             </p>
           )}
@@ -77,35 +85,45 @@ interface BacklogTaskItemProps {
 
 function BacklogTaskItem({ task, onToggle, onDelete }: BacklogTaskItemProps) {
   return (
-    <div className="flex items-center gap-3 p-2 rounded-lg bg-gray-50 dark:bg-gray-700/50 group">
+    <div 
+      className="flex items-center gap-3 p-3 group"
+      style={{ 
+        backgroundColor: 'var(--bg-tertiary)', 
+        borderRadius: '2px',
+        border: '1px solid var(--border-subtle)'
+      }}
+    >
       <button
         onClick={() => onToggle(task.id)}
-        className={cn(
-          'w-5 h-5 rounded border-2 flex items-center justify-center flex-shrink-0 transition-colors',
-          task.is_completed
-            ? 'bg-green-500 border-green-500'
-            : 'border-gray-300 dark:border-gray-600 hover:border-brand-primary'
-        )}
+        className="w-4 h-4 flex items-center justify-center flex-shrink-0 transition-colors"
+        style={{
+          border: `1px solid ${task.is_completed ? 'var(--text-tertiary)' : 'var(--border-strong)'}`,
+          borderRadius: '2px',
+          backgroundColor: task.is_completed ? 'var(--text-tertiary)' : 'transparent',
+        }}
       >
-        {task.is_completed && <Check className="w-3 h-3 text-white" />}
+        {task.is_completed && <Check className="w-2.5 h-2.5" style={{ color: 'var(--bg-primary)' }} />}
       </button>
       
       <span
-        className={cn(
-          'flex-1 text-sm',
-          task.is_completed
-            ? 'line-through text-gray-400 dark:text-gray-500'
-            : 'text-gray-900 dark:text-white'
-        )}
+        className="flex-1 text-sm"
+        style={{ 
+          fontFamily: 'var(--font-mono)',
+          color: task.is_completed ? 'var(--text-muted)' : 'var(--text-primary)',
+          textDecoration: task.is_completed ? 'line-through' : 'none'
+        }}
       >
         {task.title}
       </span>
 
       <button
         onClick={() => onDelete(task.id)}
-        className="opacity-0 group-hover:opacity-100 p-1 rounded hover:bg-gray-200 dark:hover:bg-gray-600 transition-all"
+        className="opacity-0 group-hover:opacity-100 p-1 transition-all"
+        style={{ borderRadius: '2px' }}
+        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-elevated)'}
+        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
       >
-        <Trash2 className="w-4 h-4 text-gray-400 hover:text-red-500" />
+        <Trash2 className="w-4 h-4" style={{ color: 'var(--text-muted)' }} strokeWidth={1.5} />
       </button>
     </div>
   );

@@ -3,13 +3,10 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useChronosStore } from '@/store';
-import { Header } from '@/components/layout/header';
-import { CATEGORY_COLORS } from '@chronos/shared';
-import { Plus, Pencil, Trash2, ArrowLeft, Check } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { Plus, Pencil, Trash2, ArrowLeft } from 'lucide-react';
 
-const EMOJI_OPTIONS = ['💼', '🏃', '📚', '🎨', '🍽️', '😴', '🎮', '🏠', '💪', '🧘', '📝', '💡', '🎯', '🌟', '❤️', '🔥'];
-const COLOR_HEX_VALUES = CATEGORY_COLORS.map(c => c.hex);
+// Border styles for monochrome category distinction
+const BORDER_STYLES = ['solid', 'dashed', 'double', 'dotted'];
 
 export function CategoriesClient() {
   const router = useRouter();
@@ -18,8 +15,7 @@ export function CategoriesClient() {
   const [isCreating, setIsCreating] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [name, setName] = useState('');
-  const [color, setColor] = useState(COLOR_HEX_VALUES[0]);
-  const [emoji, setEmoji] = useState('💼');
+  const [borderStyle, setBorderStyle] = useState('solid');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
@@ -28,8 +24,7 @@ export function CategoriesClient() {
 
   const resetForm = () => {
     setName('');
-    setColor(COLOR_HEX_VALUES[0]);
-    setEmoji('💼');
+    setBorderStyle('solid');
     setIsCreating(false);
     setEditingId(null);
   };
@@ -37,7 +32,7 @@ export function CategoriesClient() {
   const handleCreate = async () => {
     if (!name.trim()) return;
     setIsLoading(true);
-    await createCategory({ name: name.trim(), color, emoji });
+    await createCategory({ name: name.trim(), color: '#737373', emoji: '' });
     setIsLoading(false);
     resetForm();
   };
@@ -45,7 +40,7 @@ export function CategoriesClient() {
   const handleUpdate = async () => {
     if (!editingId || !name.trim()) return;
     setIsLoading(true);
-    await updateCategory(editingId, { name: name.trim(), color, emoji });
+    await updateCategory(editingId, { name: name.trim(), color: '#737373', emoji: '' });
     setIsLoading(false);
     resetForm();
   };
@@ -59,57 +54,87 @@ export function CategoriesClient() {
   const startEdit = (category: typeof categories[0]) => {
     setEditingId(category.id);
     setName(category.name);
-    setColor(category.color);
-    setEmoji(category.emoji || '💼');
     setIsCreating(false);
   };
 
+  // Get border style based on category name
+  const getCategoryBorderStyle = (categoryName: string): string => {
+    const n = categoryName.toLowerCase();
+    if (n.includes('work')) return 'solid';
+    if (n.includes('personal')) return 'dashed';
+    if (n.includes('focus')) return 'double';
+    if (n.includes('health')) return 'dotted';
+    return 'solid';
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <header className="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-2xl mx-auto px-4 h-16 flex items-center gap-4">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
+      <header 
+        className="sticky top-0 z-40"
+        style={{ backgroundColor: 'var(--bg-primary)', borderBottom: '1px solid var(--border-subtle)' }}
+      >
+        <div className="max-w-2xl mx-auto px-6 h-14 flex items-center gap-4">
           <button
-            onClick={() => router.push('/dashboard')}
-            className="p-2 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            onClick={() => router.push('/settings')}
+            className="btn-icon -ml-2"
           >
-            <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+            <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
           </button>
-          <h1 className="text-lg font-semibold text-gray-900 dark:text-white">Categories</h1>
+          <h1 
+            className="text-lg font-semibold uppercase tracking-wider"
+            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}
+          >
+            Categories
+          </h1>
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto p-4">
+      <main className="max-w-2xl mx-auto p-6">
         {/* Category list */}
         <div className="space-y-2 mb-6">
           {categories.map((category) => (
             <div
               key={category.id}
-              className="flex items-center gap-3 p-4 bg-white dark:bg-gray-800 rounded-xl shadow-sm"
+              className="flex items-center gap-4 p-4 group"
+              style={{ 
+                backgroundColor: 'var(--bg-secondary)', 
+                border: '1px solid var(--border-default)',
+                borderRadius: '4px'
+              }}
             >
+              {/* Border style indicator */}
               <div
-                className="w-10 h-10 rounded-lg flex items-center justify-center text-xl"
-                style={{ backgroundColor: category.color + '20' }}
-              >
-                {category.emoji || '📁'}
-              </div>
+                className="w-8 h-4"
+                style={{ 
+                  backgroundColor: 'rgba(255,255,255,0.05)',
+                  borderLeft: `3px ${getCategoryBorderStyle(category.name)} var(--text-tertiary)`,
+                }}
+              />
               <div className="flex-1">
-                <div className="font-medium text-gray-900 dark:text-white">{category.name}</div>
-                <div
-                  className="w-4 h-4 rounded-full mt-1"
-                  style={{ backgroundColor: category.color }}
-                />
+                <div 
+                  className="font-medium"
+                  style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}
+                >
+                  {category.name}
+                </div>
+                <div 
+                  className="text-xs uppercase tracking-wider mt-0.5"
+                  style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
+                >
+                  {getCategoryBorderStyle(category.name)} border
+                </div>
               </div>
               <button
                 onClick={() => startEdit(category)}
-                className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                className="btn-icon opacity-0 group-hover:opacity-100"
               >
-                <Pencil className="w-4 h-4 text-gray-500" />
+                <Pencil className="w-4 h-4" strokeWidth={1.5} />
               </button>
               <button
                 onClick={() => handleDelete(category.id)}
-                className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                className="btn-icon opacity-0 group-hover:opacity-100"
               >
-                <Trash2 className="w-4 h-4 text-red-500" />
+                <Trash2 className="w-4 h-4" strokeWidth={1.5} />
               </button>
             </div>
           ))}
@@ -117,77 +142,82 @@ export function CategoriesClient() {
 
         {/* Create/Edit form */}
         {(isCreating || editingId) && (
-          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4 mb-4">
-            <h3 className="font-medium text-gray-900 dark:text-white mb-4">
+          <div 
+            className="p-6 mb-6"
+            style={{ 
+              backgroundColor: 'var(--bg-secondary)', 
+              border: '1px solid var(--border-default)',
+              borderRadius: '4px'
+            }}
+          >
+            <h3 
+              className="text-sm font-medium uppercase tracking-wider mb-6"
+              style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}
+            >
               {editingId ? 'Edit Category' : 'New Category'}
             </h3>
             
-            <div className="space-y-4">
+            <div className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                  Name
-                </label>
+                <label className="input-label">Name</label>
                 <input
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-brand-primary focus:border-transparent"
+                  className="input"
                   placeholder="Category name"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Color
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {COLOR_HEX_VALUES.map((c) => (
+                <label className="input-label">Border Style</label>
+                <div className="grid grid-cols-4 gap-2">
+                  {BORDER_STYLES.map((style) => (
                     <button
-                      key={c}
-                      onClick={() => setColor(c)}
-                      className={cn(
-                        'w-8 h-8 rounded-full transition-transform',
-                        color === c && 'ring-2 ring-offset-2 ring-gray-900 dark:ring-white scale-110'
-                      )}
-                      style={{ backgroundColor: c }}
-                    />
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  Emoji
-                </label>
-                <div className="flex flex-wrap gap-2">
-                  {EMOJI_OPTIONS.map((e) => (
-                    <button
-                      key={e}
-                      onClick={() => setEmoji(e)}
-                      className={cn(
-                        'w-10 h-10 rounded-lg text-xl flex items-center justify-center transition-all',
-                        emoji === e
-                          ? 'bg-brand-primary/20 ring-2 ring-brand-primary'
-                          : 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600'
-                      )}
+                      key={style}
+                      onClick={() => setBorderStyle(style)}
+                      className="flex flex-col items-center gap-2 p-3 transition-all"
+                      style={{
+                        backgroundColor: borderStyle === style ? 'var(--bg-tertiary)' : 'transparent',
+                        border: borderStyle === style ? '1px solid var(--text-secondary)' : '1px solid var(--border-default)',
+                        borderRadius: '2px',
+                      }}
                     >
-                      {e}
+                      <div
+                        className="w-full h-3"
+                        style={{ 
+                          backgroundColor: 'rgba(255,255,255,0.05)',
+                          borderLeft: `3px ${style} var(--text-tertiary)`,
+                        }}
+                      />
+                      <span 
+                        className="text-xs capitalize"
+                        style={{ 
+                          color: borderStyle === style ? 'var(--text-primary)' : 'var(--text-tertiary)',
+                          fontFamily: 'var(--font-mono)'
+                        }}
+                      >
+                        {style}
+                      </span>
                     </button>
                   ))}
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-2">
+              <div 
+                className="flex gap-3 pt-4"
+                style={{ borderTop: '1px solid var(--border-subtle)' }}
+              >
                 <button
                   onClick={resetForm}
-                  className="flex-1 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+                  className="btn-secondary flex-1 py-2.5"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={editingId ? handleUpdate : handleCreate}
                   disabled={isLoading || !name.trim()}
-                  className="flex-1 py-2.5 rounded-lg font-medium text-white bg-brand-primary hover:bg-brand-primary-dark transition-colors disabled:opacity-50"
+                  className="btn-primary flex-1 py-2.5 disabled:opacity-50"
                 >
                   {isLoading ? 'Saving...' : editingId ? 'Update' : 'Create'}
                 </button>
@@ -200,9 +230,23 @@ export function CategoriesClient() {
         {!isCreating && !editingId && (
           <button
             onClick={() => setIsCreating(true)}
-            className="w-full flex items-center justify-center gap-2 py-3 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 text-gray-600 dark:text-gray-400 hover:border-brand-primary hover:text-brand-primary transition-colors"
+            className="w-full flex items-center justify-center gap-2 py-4 transition-colors"
+            style={{ 
+              border: '1px dashed var(--border-default)',
+              borderRadius: '4px',
+              color: 'var(--text-tertiary)',
+              fontFamily: 'var(--font-mono)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--text-secondary)';
+              e.currentTarget.style.color = 'var(--text-primary)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--border-default)';
+              e.currentTarget.style.color = 'var(--text-tertiary)';
+            }}
           >
-            <Plus className="w-5 h-5" />
+            <Plus className="w-4 h-4" strokeWidth={1.5} />
             Add Category
           </button>
         )}

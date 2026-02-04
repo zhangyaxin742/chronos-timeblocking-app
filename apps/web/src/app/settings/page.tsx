@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
-import { ArrowLeft, Sun, Moon, Monitor, LogOut } from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { ArrowLeft, Sun, Moon, Monitor, LogOut, ChevronRight } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 
 export default function SettingsPage() {
@@ -26,43 +25,63 @@ export default function SettingsPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-      <header className="sticky top-0 z-40 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-2xl mx-auto px-4 h-16 flex items-center gap-4">
+    <div className="min-h-screen" style={{ backgroundColor: 'var(--bg-primary)' }}>
+      <header 
+        className="sticky top-0 z-40"
+        style={{ backgroundColor: 'var(--bg-primary)', borderBottom: '1px solid var(--border-subtle)' }}
+      >
+        <div className="max-w-2xl mx-auto px-6 h-14 flex items-center gap-4">
           <button
             onClick={() => router.push('/dashboard')}
-            className="p-2 -ml-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            className="btn-icon -ml-2"
           >
-            <ArrowLeft className="w-5 h-5 text-gray-600 dark:text-gray-300" />
+            <ArrowLeft className="w-4 h-4" strokeWidth={1.5} />
           </button>
-          <h1 className="text-lg font-semibold text-gray-900 dark:text-white">Settings</h1>
+          <h1 
+            className="text-lg font-semibold uppercase tracking-wider"
+            style={{ color: 'var(--text-primary)', fontFamily: 'var(--font-mono)' }}
+          >
+            Settings
+          </h1>
         </div>
       </header>
 
-      <main className="max-w-2xl mx-auto p-4 space-y-6">
+      <main className="max-w-2xl mx-auto p-6 space-y-6">
         {/* Theme */}
-        <section className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-4">
-          <h2 className="font-medium text-gray-900 dark:text-white mb-4">Appearance</h2>
+        <section 
+          className="p-4"
+          style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-default)', borderRadius: '4px' }}
+        >
+          <h2 
+            className="text-xs font-medium uppercase tracking-wider mb-4"
+            style={{ color: 'var(--text-tertiary)', fontFamily: 'var(--font-mono)' }}
+          >
+            Appearance
+          </h2>
           <div className="grid grid-cols-3 gap-2">
             {themeOptions.map((option) => (
               <button
                 key={option.value}
                 onClick={() => setTheme(option.value)}
-                className={cn(
-                  'flex flex-col items-center gap-2 p-4 rounded-xl transition-all',
-                  theme === option.value
-                    ? 'bg-brand-primary/10 ring-2 ring-brand-primary'
-                    : 'bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600'
-                )}
+                className="flex flex-col items-center gap-2 p-4 transition-all"
+                style={{
+                  backgroundColor: theme === option.value ? 'var(--bg-tertiary)' : 'transparent',
+                  border: theme === option.value ? '1px solid var(--text-secondary)' : '1px solid var(--border-default)',
+                  borderRadius: '2px',
+                }}
               >
-                <option.icon className={cn(
-                  'w-6 h-6',
-                  theme === option.value ? 'text-brand-primary' : 'text-gray-500'
-                )} />
-                <span className={cn(
-                  'text-sm font-medium',
-                  theme === option.value ? 'text-brand-primary' : 'text-gray-700 dark:text-gray-300'
-                )}>
+                <option.icon 
+                  className="w-5 h-5" 
+                  style={{ color: theme === option.value ? 'var(--text-primary)' : 'var(--text-tertiary)' }}
+                  strokeWidth={1.5}
+                />
+                <span 
+                  className="text-sm"
+                  style={{ 
+                    color: theme === option.value ? 'var(--text-primary)' : 'var(--text-tertiary)',
+                    fontFamily: 'var(--font-mono)'
+                  }}
+                >
                   {option.label}
                 </span>
               </button>
@@ -71,30 +90,45 @@ export default function SettingsPage() {
         </section>
 
         {/* Navigation */}
-        <section className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+        <section 
+          style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-default)', borderRadius: '4px' }}
+        >
           <button
             onClick={() => router.push('/categories')}
-            className="w-full flex items-center justify-between px-4 py-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
+            className="w-full flex items-center justify-between px-4 py-4 transition-colors"
+            style={{ fontFamily: 'var(--font-mono)' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
-            <span className="font-medium text-gray-900 dark:text-white">Manage Categories</span>
-            <ArrowLeft className="w-5 h-5 text-gray-400 rotate-180" />
+            <span style={{ color: 'var(--text-primary)' }}>Manage Categories</span>
+            <ChevronRight className="w-4 h-4" style={{ color: 'var(--text-tertiary)' }} strokeWidth={1.5} />
           </button>
         </section>
 
         {/* Account */}
-        <section className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
+        <section 
+          style={{ backgroundColor: 'var(--bg-secondary)', border: '1px solid var(--border-default)', borderRadius: '4px' }}
+        >
           <button
             onClick={handleLogout}
             disabled={isLoggingOut}
-            className="w-full flex items-center gap-3 px-4 py-4 text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors disabled:opacity-50"
+            className="w-full flex items-center gap-3 px-4 py-4 transition-colors disabled:opacity-50"
+            style={{ fontFamily: 'var(--font-mono)' }}
+            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'var(--bg-tertiary)'}
+            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
           >
-            <LogOut className="w-5 h-5" />
-            <span className="font-medium">{isLoggingOut ? 'Logging out...' : 'Log Out'}</span>
+            <LogOut className="w-4 h-4" style={{ color: 'var(--text-tertiary)' }} strokeWidth={1.5} />
+            <span style={{ color: 'var(--text-secondary)' }}>
+              {isLoggingOut ? 'Logging out...' : 'Log Out'}
+            </span>
           </button>
         </section>
 
         {/* Version */}
-        <p className="text-center text-sm text-gray-400">
+        <p 
+          className="text-center text-xs uppercase tracking-wider"
+          style={{ color: 'var(--text-muted)', fontFamily: 'var(--font-mono)' }}
+        >
           CHRONOS v1.0.0
         </p>
       </main>
