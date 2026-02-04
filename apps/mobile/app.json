@@ -9,20 +9,30 @@
     "newArchEnabled": true,
     "scheme": "chronos",
     "splash": {
-      "image": "./assets/splash-icon.png",
+      "image": "./assets/splash.png",
       "resizeMode": "contain",
       "backgroundColor": "#0D0D0D"
     },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.chronos.app"
+      "bundleIdentifier": "com.chronos.timeblocking",
+      "infoPlist": {
+        "UIAppFonts": [
+          "JetBrainsMono-Regular.ttf",
+          "JetBrainsMono-Medium.ttf",
+          "JetBrainsMono-Bold.ttf"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#0D0D0D"
       },
-      "package": "com.chronos.app",
+      "package": "com.chronos.timeblocking",
       "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },

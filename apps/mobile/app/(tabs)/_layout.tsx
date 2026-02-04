@@ -6,16 +6,22 @@ export default function TabsLayout() {
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#E8E8E8',
-        tabBarInactiveTintColor: '#666666',
+        tabBarActiveTintColor: '#FAFAFA',
+        tabBarInactiveTintColor: '#737373',
         tabBarStyle: {
           backgroundColor: '#0D0D0D',
-          borderTopColor: '#262626',
+          borderTopColor: '#2A2A2A',
           borderTopWidth: 1,
+          height: 60,
         },
         tabBarLabelStyle: {
           fontFamily: 'monospace',
-          fontSize: 11,
+          fontSize: 10,
+          letterSpacing: 0.5,
+          textTransform: 'uppercase',
+        },
+        tabBarIconStyle: {
+          marginTop: 4,
         },
       }}
     >
@@ -24,7 +30,16 @@ export default function TabsLayout() {
         options={{
           title: 'Today',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="calendar-outline" size={size} color={color} />
+            <Ionicons name="calendar-outline" size={18} color={color} strokeWidth={1.5} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="week"
+        options={{
+          title: 'Week',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="grid-outline" size={18} color={color} strokeWidth={1.5} />
           ),
         }}
       />
@@ -33,7 +48,16 @@ export default function TabsLayout() {
         options={{
           title: 'Backlog',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="list-outline" size={size} color={color} />
+            <Ionicons name="list-outline" size={18} color={color} strokeWidth={1.5} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="categories"
+        options={{
+          title: 'Categories',
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="folder-outline" size={18} color={color} strokeWidth={1.5} />
           ),
         }}
       />
@@ -42,7 +66,7 @@ export default function TabsLayout() {
         options={{
           title: 'Settings',
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="settings-outline" size={size} color={color} />
+            <Ionicons name="settings-outline" size={18} color={color} strokeWidth={1.5} />
           ),
         }}
       />
