@@ -1,5 +1,6 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useTheme } from 'next-themes';
 import { ChevronLeft, ChevronRight, Sun, Moon, Settings } from 'lucide-react';
@@ -11,6 +12,11 @@ export function Header() {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const { selectedDate, setSelectedDate } = useChronosStore();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handlePrevDay = () => {
     setSelectedDate(addDays(selectedDate, -1));
@@ -102,11 +108,11 @@ export function Header() {
             className="btn-icon"
             aria-label="Toggle theme"
           >
-            {theme === 'dark' ? (
+            {mounted && (theme === 'dark' ? (
               <Sun className="w-4 h-4" strokeWidth={1.5} />
             ) : (
               <Moon className="w-4 h-4" strokeWidth={1.5} />
-            )}
+            ))}
           </button>
 
           <button

@@ -89,7 +89,7 @@ export function TimeblockCard({ timeblock, startHour }: TimeblockCardProps) {
         )}
 
         {/* Tasks (if space allows) */}
-        {height >= 120 && timeblock.tasks && timeblock.tasks.length > 0 && (
+        {height >= TIME_GRID.SLOT_HEIGHT * 4 && timeblock.tasks && timeblock.tasks.length > 0 && (
           <div className="mt-3 space-y-1.5">
             {timeblock.tasks.slice(0, 3).map((task) => (
               <div

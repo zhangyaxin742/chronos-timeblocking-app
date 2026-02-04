@@ -14,18 +14,21 @@ export function DayView() {
   const [dragStart, setDragStart] = useState<{ y: number; slotIndex: number } | null>(null);
   const [dragEnd, setDragEnd] = useState<number | null>(null);
 
-  const startHour = 6;
-  const endHour = 23;
-  const totalSlots = (endHour - startHour + 1) * 4;
+  const startHour = TIME_GRID.DEFAULT_START_HOUR;
+  const endHour = TIME_GRID.DEFAULT_END_HOUR;
+  const totalSlots = (endHour - startHour + 1) * TIME_GRID.SLOTS_PER_HOUR;
   const gridHeight = totalSlots * TIME_GRID.SLOT_HEIGHT;
 
   useEffect(() => {
-    // Scroll to 8 AM on mount
-    if (containerRef.current) {
-      const scrollTo = (8 - startHour) * 4 * TIME_GRID.SLOT_HEIGHT;
-      containerRef.current.scrollTop = scrollTo;
-    }
-  }, []);
+    if (!containerRef.current) return;
+
+    const sorted = [...timeblocks].sort((a, b) => a.start_time.localeCompare(b.start_time));
+    const targetTime = sorted[0]?.start_time ?? '08:00';
+    const [hours, minutes] = targetTime.split(':').map(Number);
+    const totalMinutes = (hours - startHour) * 60 + minutes;
+    const scrollTo = Math.max(0, (totalMinutes / 15) * TIME_GRID.SLOT_HEIGHT - 120);
+    containerRef.current.scrollTop = scrollTo;
+  }, [timeblocks, startHour]);
 
   const handleMouseDown = (e: React.MouseEvent) => {
     if (e.target !== e.currentTarget) return;

@@ -20,11 +20,11 @@ export const DEFAULT_CATEGORIES = [
 
 // Time grid configuration
 export const TIME_GRID = {
-  SLOT_HEIGHT: 60, // pixels per 15-minute slot
+  SLOT_HEIGHT: 15, // pixels per 15-minute slot
   SLOTS_PER_HOUR: 4,
   MIN_TIMEBLOCK_SLOTS: 1, // minimum 15 minutes
   TIME_AXIS_WIDTH: 60, // pixels
-  DEFAULT_START_HOUR: 6,
+  DEFAULT_START_HOUR: 0,
   DEFAULT_END_HOUR: 23,
 };
 
