@@ -58,6 +58,10 @@ interface ChronosState {
   deleteTask: (id: string) => Promise<void>;
   toggleTaskComplete: (id: string) => Promise<void>;
   rolloverTasks: () => Promise<number | undefined>;
+  
+  // Edge function helpers
+  duplicateTimeblock: (timeblockId: string, targetDate: string, targetTime: string, includeTasks?: boolean) => Promise<Timeblock | null>;
+  exportData: () => Promise<any>;
 }
 
 const getTodayISO = () => new Date().toISOString().split('T')[0];
@@ -294,42 +298,18 @@ export const useChronosStore = create<ChronosState>((set, get) => ({
   
   rolloverTasks: async () => {
     const supabase = createClient();
-    const today = getTodayISO();
-    
-    // Find incomplete tasks from previous days that are in timeblocks
-    const { data: incompleteTasks, error } = await supabase
-      .from('tasks')
-      .select(`
-        *,
-        timeblock:timeblocks(date)
-      `)
-      .eq('is_completed', false)
-      .not('timeblock_id', 'is', null);
-    
-    if (error || !incompleteTasks) return;
-    
-    // Filter tasks from past days
-    const tasksToRollover = incompleteTasks.filter((task: any) => {
-      return task.timeblock?.date && task.timeblock.date < today;
-    });
-    
-    // Move tasks to backlog (remove timeblock_id)
-    for (const task of tasksToRollover) {
-      await supabase
-        .from('tasks')
-        .update({ 
-          timeblock_id: null,
-          rolled_over_from: task.timeblock_id,
-          rolled_over_at: new Date().toISOString(),
-        })
-        .eq('id', task.id);
+    const { data, error } = await supabase.functions.invoke('rollover-tasks');
+
+    if (error) {
+      console.error('Failed to rollover tasks:', error);
+      return undefined;
     }
-    
+
     // Refresh data
     get().fetchBacklogTasks();
     get().fetchTimeblocks(get().selectedDate);
-    
-    return tasksToRollover.length;
+
+    return data?.rolled_over || 0;
   },
 
   toggleTaskComplete: async (id) => {
@@ -351,5 +331,43 @@ export const useChronosStore = create<ChronosState>((set, get) => ({
         get().fetchBacklogTasks();
       }
     }
+  },
+
+  // Edge function: Duplicate a timeblock to a new date/time
+  duplicateTimeblock: async (timeblockId, targetDate, targetTime, includeTasks = true) => {
+    const supabase = createClient();
+    const { data, error } = await supabase.functions.invoke('duplicate-timeblock', {
+      body: {
+        timeblock_id: timeblockId,
+        target_date: targetDate,
+        target_time: targetTime,
+        include_tasks: includeTasks,
+      },
+    });
+
+    if (error) {
+      console.error('Failed to duplicate timeblock:', error);
+      return null;
+    }
+
+    // Refresh timeblocks if duplicated to current date
+    if (targetDate === get().selectedDate) {
+      get().fetchTimeblocks(get().selectedDate);
+    }
+
+    return data?.timeblock || null;
+  },
+
+  // Edge function: Export all user data
+  exportData: async () => {
+    const supabase = createClient();
+    const { data, error } = await supabase.functions.invoke('export-data');
+
+    if (error) {
+      console.error('Failed to export data:', error);
+      return null;
+    }
+
+    return data;
   },
 }));
