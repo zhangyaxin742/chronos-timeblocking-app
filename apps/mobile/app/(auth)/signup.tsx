@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { View, Text, TextInput, Pressable, KeyboardAvoidingView, Platform, ScrollView, StyleSheet } from 'react-native';
 import { Link } from 'expo-router';
 import { supabase } from '../../lib/supabase';
 
@@ -33,36 +33,28 @@ export default function SignupScreen() {
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      className="flex-1 bg-bg-primary"
+      style={styles.container}
     >
-      <ScrollView contentContainerClassName="flex-1 justify-center px-6">
-        <View className="mb-12">
-          <Text className="text-4xl font-bold text-text-primary font-mono mb-2">
-            CHRONOS
-          </Text>
-          <Text className="text-text-tertiary font-mono">
-            Create your account
-          </Text>
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        <View style={styles.header}>
+          <Text style={styles.title}>CHRONOS</Text>
+          <Text style={styles.subtitle}>Create your account</Text>
         </View>
 
-        <View className="space-y-4">
-          <View>
-            <Text className="text-text-secondary font-mono text-sm mb-2">
-              Display Name
-            </Text>
+        <View style={styles.form}>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Display Name</Text>
             <TextInput
               value={displayName}
               onChangeText={setDisplayName}
               placeholder="Your Name"
               placeholderTextColor="#666666"
-              className="bg-bg-secondary border border-border-default rounded px-4 py-3 text-text-primary font-mono"
+              style={styles.input}
             />
           </View>
 
-          <View>
-            <Text className="text-text-secondary font-mono text-sm mb-2">
-              Email
-            </Text>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Email</Text>
             <TextInput
               value={email}
               onChangeText={setEmail}
@@ -70,47 +62,41 @@ export default function SignupScreen() {
               placeholderTextColor="#666666"
               autoCapitalize="none"
               keyboardType="email-address"
-              className="bg-bg-secondary border border-border-default rounded px-4 py-3 text-text-primary font-mono"
+              style={styles.input}
             />
           </View>
 
-          <View>
-            <Text className="text-text-secondary font-mono text-sm mb-2">
-              Password
-            </Text>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Password</Text>
             <TextInput
               value={password}
               onChangeText={setPassword}
               placeholder="••••••••"
               placeholderTextColor="#666666"
               secureTextEntry
-              className="bg-bg-secondary border border-border-default rounded px-4 py-3 text-text-primary font-mono"
+              style={styles.input}
             />
           </View>
 
           {error ? (
-            <Text className="text-red-500 font-mono text-sm">{error}</Text>
+            <Text style={styles.errorText}>{error}</Text>
           ) : null}
 
           <Pressable
             onPress={handleSignup}
             disabled={loading}
-            className="bg-text-primary py-3 rounded items-center active:opacity-80"
+            style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
           >
-            <Text className="text-bg-primary font-mono font-semibold">
+            <Text style={styles.buttonText}>
               {loading ? 'Creating account...' : 'Sign Up'}
             </Text>
           </Pressable>
 
-          <View className="flex-row justify-center items-center mt-4">
-            <Text className="text-text-tertiary font-mono text-sm">
-              Already have an account?{' '}
-            </Text>
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>Already have an account? </Text>
             <Link href="/(auth)/login" asChild>
               <Pressable>
-                <Text className="text-text-primary font-mono text-sm underline">
-                  Sign In
-                </Text>
+                <Text style={styles.linkText}>Sign In</Text>
               </Pressable>
             </Link>
           </View>
@@ -119,3 +105,87 @@ export default function SignupScreen() {
     </KeyboardAvoidingView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#0D0D0D',
+  },
+  scrollContent: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
+  header: {
+    marginBottom: 48,
+  },
+  title: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#FAFAFA',
+    fontFamily: 'monospace',
+    marginBottom: 8,
+  },
+  subtitle: {
+    color: '#737373',
+    fontFamily: 'monospace',
+  },
+  form: {
+    gap: 16,
+  },
+  inputGroup: {
+    marginBottom: 16,
+  },
+  label: {
+    color: '#A3A3A3',
+    fontFamily: 'monospace',
+    fontSize: 14,
+    marginBottom: 8,
+  },
+  input: {
+    backgroundColor: '#1A1A1A',
+    borderWidth: 1,
+    borderColor: '#2A2A2A',
+    borderRadius: 4,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    color: '#FAFAFA',
+    fontFamily: 'monospace',
+  },
+  errorText: {
+    color: '#EF4444',
+    fontFamily: 'monospace',
+    fontSize: 14,
+  },
+  button: {
+    backgroundColor: '#FAFAFA',
+    paddingVertical: 12,
+    borderRadius: 4,
+    alignItems: 'center',
+  },
+  buttonPressed: {
+    opacity: 0.8,
+  },
+  buttonText: {
+    color: '#0D0D0D',
+    fontFamily: 'monospace',
+    fontWeight: '600',
+  },
+  footer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 16,
+  },
+  footerText: {
+    color: '#737373',
+    fontFamily: 'monospace',
+    fontSize: 14,
+  },
+  linkText: {
+    color: '#FAFAFA',
+    fontFamily: 'monospace',
+    fontSize: 14,
+    textDecorationLine: 'underline',
+  },
+});

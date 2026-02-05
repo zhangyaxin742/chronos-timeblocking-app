@@ -1,18 +1,20 @@
-import { useEffect } from 'react';
-import { Stack, useRouter, useSegments } from 'expo-router';
+import { useEffect, useState } from 'react';
+import { Slot, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { supabase } from '../lib/supabase';
 import { useChronosStore } from '../store';
-import '../global.css';
 
-export default function RootLayout() {
+function InitialLayout() {
   const router = useRouter();
   const segments = useSegments();
   const { user, setUser } = useChronosStore();
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user as any);
+      setIsReady(true);
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
@@ -23,6 +25,8 @@ export default function RootLayout() {
   }, []);
 
   useEffect(() => {
+    if (!isReady) return;
+
     const inAuthGroup = segments[0] === '(auth)';
 
     if (!user && !inAuthGroup) {
@@ -30,15 +34,33 @@ export default function RootLayout() {
     } else if (user && inAuthGroup) {
       router.replace('/(tabs)');
     }
-  }, [user, segments]);
+  }, [user, segments, isReady]);
 
+  if (!isReady) {
+    return (
+      <View style={styles.loading}>
+        <ActivityIndicator size="large" color="#FAFAFA" />
+      </View>
+    );
+  }
+
+  return <Slot />;
+}
+
+export default function RootLayout() {
   return (
     <>
-      <StatusBar style="auto" />
-      <Stack screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="(auth)" />
-        <Stack.Screen name="(tabs)" />
-      </Stack>
+      <StatusBar style="light" />
+      <InitialLayout />
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  loading: {
+    flex: 1,
+    backgroundColor: '#0D0D0D',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+});
